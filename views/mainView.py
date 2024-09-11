@@ -15,3 +15,6 @@ def main(page: ft.Page):
     login_page(page, auth)  # Llama a la página de inicio de sesión
 
 ft.app(target=main)
+
+
+

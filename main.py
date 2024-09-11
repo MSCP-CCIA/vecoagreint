@@ -1,5 +1,5 @@
 import flet as ft
-
+from firebase_admin import auth
 
 def login_page(page):
     page.title = "Authentication System"
