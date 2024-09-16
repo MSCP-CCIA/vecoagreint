@@ -1,19 +1,20 @@
 import flet as ft
-from loginView import login_page  # Importa la función login_page desde login.py
-
-# Simulación del objeto auth
-class AuthSimulator:
-    def sign_in_with_email_and_password(self, email, password):
-        # Lógica simulada de inicio de sesión
-        if email == "test@example.com" and password == "password":
-            return {"email": email}
-        else:
-            raise Exception("Invalid credentials")
+from loginView import login_page  # Import the login_page function from loginView.py
 
 def main(page: ft.Page):
-    auth = AuthSimulator()  # Crea una instancia del simulador de autenticación
-    login_page(page, auth)  # Llama a la página de inicio de sesión
+    """
+    Main entry point for the Flet application. Sets up and displays the login page.
 
+    Args:
+        page (ft.Page): The Flet page object to configure and display the login interface.
+
+    This function initializes the login page by calling the `login_page` function
+    and passing the Flet page object. This setup will be used when the application starts.
+    """
+    # Create an instance of the authentication simulator
+    login_page(page)  # Call the login page function
+
+# Run the Flet app with the `main` function as the entry point
 ft.app(target=main)
 
 
