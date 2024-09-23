@@ -1,56 +1,67 @@
 import flet as ft
+from authentication.Login import authenticate_user
 
-def login_page(page):
+def login_page(page: ft.Page):
     """
     Creates and configures the login page for the authentication system.
-
     Args:
         page (ft.Page): The Flet page object to configure and display the login interface.
-
-    This function sets up the layout and components for the login page, including:
-    - A left panel with the company name.
-    - A right panel with the login form, including email/username and password fields,
-      login button, forgot password link, SSO button, and Google sign-in button.
-
-    The page layout includes:
-    - A left panel with a centered text for the company name.
-    - A right panel with a form consisting of text fields and buttons, centered on the page.
     """
-    # Set page properties
     page.title = "Authentication System"
-    page.window_full_screen = True  # Set to False to avoid full screen
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER  # Center content vertically
-    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER  # Center content horizontally
+    page.window_full_screen = True
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.bgcolor = "black"
 
-    # Left panel with company information
+    # Ensure that the image path is correct
+    image_path = "path_to_your_image.png"  # Change this to your actual image path
+
+    # Left panel with the company name and image
     left_panel = ft.Container(
         content=ft.Stack(
             [
-                ft.Row(
-                    [
-                        ft.Text(
-                            "VECOAGREINT S.A.S",
-                            color="white",
-                            size=80,
-                            weight="bold",
-                        )
-                    ],
-                    alignment=ft.MainAxisAlignment.CENTER,
+                ft.Image(
+                    src=image_path,  # Add your image path here
+                    fit=ft.ImageFit.CONTAIN,
+                    width=300,  # Adjust the width based on your design
+                    height=300,  # Adjust the height based on your design
                 ),
+                ft.Text(
+                    "VECOAGREINT S.A.S",
+                    color="white",
+                    size=80,
+                    weight="bold",
+                )
             ],
-            expand=True,  # Allows the Stack to take up all available space
+            expand=True,
         ),
         bgcolor="black",
-        width=500,  # Fixed width of the container
-        expand=True,  # Allows the container to occupy all available space
-        alignment=ft.alignment.center_left,
+        width=500,
+        expand=True,
+        alignment=ft.alignment.center,
     )
 
-    # Right panel with the login form (without authentication functionality)
+    # Inputs for email and password
     email_input = ft.TextField(label="Email or Username", width=350)
     password_input = ft.TextField(label="Password", password=True, can_reveal_password=True, width=350)
 
+    def on_login_click(e):
+        email = email_input.value
+        password = password_input.value
+
+        # Call authenticate_user
+        is_authenticated, id_token, refresh_token = authenticate_user(email, password)
+
+        if is_authenticated:
+
+            # Navigate to the main menu view if authentication is successful
+            page.go("/mainMenuView")
+        else:
+            # Show snack bar with error message
+            page.snack_bar("Authentication failed. Please check your email and password.")
+            page.update()
+
+    # Form content
     form_column = ft.Column(
         controls=[
             email_input,
@@ -58,6 +69,7 @@ def login_page(page):
             ft.ElevatedButton(
                 text="Log In",
                 width=350,
+                on_click=on_login_click,
                 style=ft.ButtonStyle(
                     bgcolor={"": "#FF7043"},
                     color={"": "white"},
@@ -91,6 +103,7 @@ def login_page(page):
         alignment="start",
     )
 
+    # Right panel with the form
     right_panel = ft.Container(
         content=form_column,
         bgcolor="white",
@@ -99,7 +112,7 @@ def login_page(page):
         alignment=ft.alignment.center,
     )
 
-    # Main structure with two columns
+    # Combine panels in a row
     main_view = ft.Row(
         controls=[left_panel, right_panel],
         alignment="center",

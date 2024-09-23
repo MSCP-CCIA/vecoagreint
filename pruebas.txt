@@ -1,22 +1,2 @@
-    left_panel = ft.Container(
-
-        content=ft.Column(
-            controls=[
-                ft.Image(src="assets/image_main.png", width=1500),
-                ft.Text("VECOAGREINT S.A.S", size=36, weight="bold", color="white"),
-                ft.Text("", color="white"),
-                ft.Text("", color="white"),
-                ft.Text("", color="white"),
-                ft.Text("", color="white"),
-            ],
-            spacing=20,
-            alignment="start",
-        ),
-
-        bgcolor="black",
-        width=500,
-        padding=40,
-        expand=True,
-        alignment=ft.alignment.center_left,
-
-    )
+email = "usuario@ejemplo.com"
+password = "contraseñaSegura123"
