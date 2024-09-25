@@ -1,5 +1,5 @@
 import flet as ft
-
+from dataBaseFirebase.fireStoreCrud import *
 def driverFormView(page: ft.Page):
     """
     Creates and configures the driver form page.
@@ -161,16 +161,51 @@ def driverFormView(page: ft.Page):
 
     page.add(main_view)
 
-def search_driver(cedula):
+def search_driver(cedula, nombre_input, apellidos_input, tipo_vehiculo_input, placa_input):
     """
     Function to handle driver search.
+    Updates the input fields with driver data if found.
     """
-    # Aquí puedes implementar la lógica para buscar al conductor por cédula
-    print(f"Buscando conductor con cédula: {cedula}")
+    driver_data = read_document(cedula)
+
+    if driver_data:
+        # Actualiza los campos con los datos del conductor
+        nombre_input.value = driver_data.get('nombre', '')
+        apellidos_input.value = driver_data.get('apellidos', '')
+        tipo_vehiculo_input.value = driver_data.get('tipo_vehiculo', '')
+        placa_input.value = driver_data.get('placa', '')
+
+        # Llama a update() para reflejar los cambios en la interfaz
+        nombre_input.update()
+        apellidos_input.update()
+        tipo_vehiculo_input.update()
+        placa_input.update()
+
+        print(f"Conductor encontrado: {driver_data}")
+    else:
+        print(f"No se encontró un conductor con la cédula: {cedula}")
+        # Si no se encuentra el conductor, vacía los campos
+        nombre_input.value = ''
+        apellidos_input.value = ''
+        tipo_vehiculo_input.value = ''
+        placa_input.value = ''
+        nombre_input.update()
+        apellidos_input.update()
+        tipo_vehiculo_input.update()
+        placa_input.update()
 
 def save_driver(cedula, nombre, apellidos, tipo_vehiculo, placa):
     """
     Function to handle saving driver data.
     """
-    # Aquí puedes implementar la lógica para guardar los datos del conductor
-    print(f"Guardando conductor: {cedula}, {nombre} {apellidos}, Tipo de vehículo: {tipo_vehiculo}, Placa: {placa}")
+    driver_data = {
+        "cedula": cedula,
+        "nombre": nombre,
+        "apellidos": apellidos,
+        "tipo_vehiculo": tipo_vehiculo,
+        "placa": placa
+    }
+
+    # Usa la función de creación/actualización del CRUD para guardar los datos
+    create_document(driver_data, cedula)
+    print(f"Conductor guardado: {cedula}, {nombre} {apellidos}, {tipo_vehiculo}, {placa}")

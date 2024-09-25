@@ -1,49 +1,33 @@
 import firebase_admin
-from firebase_admin import credentials
+from firebase_admin import credentials, firestore
 
-
+# Function to initialize Firebase
 def initialize_firebase():
     """
-    Initializes the Firebase application using the provided credentials.
-
-    The function checks if Firebase has already been initialized before
-    attempting to initialize it. If Firebase is already initialized, it
-    returns the existing instance; otherwise, it initializes Firebase
-    with the provided credentials and returns the initialized app instance.
-
-    Returns:
-        firebase_admin.App: The initialized Firebase app instance.
-
-    Raises:
-        FileNotFoundError: If the credentials file is not found at the specified path.
-        ValueError: If there is an error loading the credentials.
+    Initializes the Firebase app if it has not been initialized previously.
+    Checks if the credentials are valid and if the app is already initialized.
     """
-    # Path to the downloaded JSON credentials file
-    cred_path = "../firebaseCredentials/vecoagreint-12842-firebase-adminsdk-tz90k-c010403cfa.json"
+    if not firebase_admin._apps:  # Check if it has already been initialized
+        try:
+            cred = credentials.Certificate("../firebaseCredentials/vecoagreint-12842-firebase-adminsdk-tz90k-dcda552240.json")
+            firebase_admin.initialize_app(cred)
+            print("Firebase has been initialized successfully.")
+        except Exception as e:
+            print(f"Error initializing Firebase: {e}")
+            raise e
+    else:
+        print("Firebase was already initialized.")
 
+# Function to get a reference to Firestore
+def get_firestore_client():
+    """
+    Returns a reference to the Firestore client.
+    Make sure Firebase is initialized before obtaining the client.
+    """
     try:
-        cred = credentials.Certificate(cred_path)
-    except FileNotFoundError as e:
-        print(f"Error: Credentials file not found at the specified path: {cred_path}")
-        raise e
-    except ValueError as e:
-        print(f"Error loading credentials file: {e}")
-        raise e
-
-    try:
-        # Initialize Firebase only if it has not been initialized already
-        if not firebase_admin._apps:
-            app = firebase_admin.initialize_app(cred)
-            print("Firebase successfully initialized")
-            return app
-        else:
-            print("Firebase was already initialized")
-            return firebase_admin.get_app()
+        initialize_firebase()
+        return firestore.client()
     except Exception as e:
-        print(f"Error initializing Firebase: {e}")
+        print(f"Error getting Firestore client: {e}")
         raise e
 
-
-if __name__ == "__main__":
-    # Run the initialization function only if the script is executed directly
-    initialize_firebase()

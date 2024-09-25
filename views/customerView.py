@@ -1,5 +1,5 @@
 import flet as ft
-
+from dataBaseFirebase.fireStoreCrud import *
 def customerFormView(page: ft.Page):
     """
     Creates and configures the customer form page.
@@ -60,7 +60,7 @@ def customerFormView(page: ft.Page):
     # Buttons to search and save
     search_button = ft.ElevatedButton(
         text="Buscar",
-        on_click=lambda e: search_customer(cedula_input.value),
+        on_click=lambda e: search_customer(cedula_input.value, nombre_input, apellidos_input, telefono_input),
         style=ft.ButtonStyle(
             bgcolor="#FF7043",
             color="white",
@@ -150,16 +150,59 @@ def customerFormView(page: ft.Page):
 
     page.add(main_view)
 
-def search_customer(cedula):
+
+def search_customer(cedula, nombre_input, apellidos_input, telefono_input):
     """
     Function to handle customer search.
+    Updates the input fields with customer data if found.
     """
-    # Aquí puedes implementar la lógica para buscar al cliente por cédula
-    print(f"Buscando cliente con cédula: {cedula}")
+    # Busca el documento en la colección 'customers' usando la función de lectura del CRUD
+    customer_data = read_document('customers',cedula)
+
+    if customer_data:
+        # Si se encuentra, actualiza las cajas de texto
+        nombre_input.value = customer_data.get('nombre', '')
+        apellidos_input.value = customer_data.get('apellidos', '')
+        telefono_input.value = customer_data.get('telefono', '')
+
+        # Refresca la página para mostrar los nuevos valores
+        nombre_input.update()
+        apellidos_input.update()
+        telefono_input.update()
+
+        print(f"Cliente encontrado: {customer_data}")
+    else:
+        # Si no se encuentra, puedes vaciar los campos o mostrar un mensaje de error
+        print(f"No se encontró un cliente con la cédula: {cedula}")
+        nombre_input.value = ''
+        apellidos_input.value = ''
+        telefono_input.value = ''
+
+        nombre_input.update()
+        apellidos_input.update()
+        telefono_input.update()
+
 
 def save_customer(cedula, nombre, apellidos, telefono):
     """
     Function to handle saving customer data.
     """
-    # Aquí puedes implementar la lógica para guardar los datos del cliente
-    print(f"Guardando cliente: {cedula}, {nombre} {apellidos}, {telefono}")
+    customer_data = {
+        "cedula": cedula,
+        "nombre": nombre,
+        "apellidos": apellidos,
+        "telefono": telefono
+    }
+
+    try:
+        # Check if the customer exists to decide between creating or updating
+        existing_customer = read_document('customers', cedula)
+
+        if existing_customer:
+            update_document('customers', cedula, customer_data)
+            print(f"Cliente {cedula} actualizado correctamente.")
+        else:
+            create_document(customer_data, 'customer', cedula)
+            print(f"Cliente {cedula} creado correctamente.")
+    except Exception as e:
+        print(f"Error al guardar cliente: {e}")
