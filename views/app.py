@@ -4,6 +4,8 @@ from loginView import login_page
 from mainMenuView import mainMenuView
 from customerView import customerFormView
 from driverView import driverFormView
+
+
 def main(page: ft.Page):
     """
     Main entry point for the Flet application. Sets up and displays the login page.
@@ -30,4 +32,5 @@ def main(page: ft.Page):
     page.on_route_change = route_change
     page.go("/")
 
-ft.app(target=main, view=flet.WEB_BROWSER)
+
+ft.app(target=main)

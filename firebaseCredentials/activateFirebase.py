@@ -1,6 +1,7 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
 
+
 # Function to initialize Firebase
 def initialize_firebase():
     """
@@ -9,7 +10,9 @@ def initialize_firebase():
     """
     if not firebase_admin._apps:  # Check if it has already been initialized
         try:
-            cred = credentials.Certificate("../firebaseCredentials/vecoagreint-12842-firebase-adminsdk-tz90k-dcda552240.json")
+            cred = credentials.Certificate(
+                "../firebaseCredentials/vecoagreint-12842-firebase-adminsdk-tz90k-dec062fbc3.json"
+            )
             firebase_admin.initialize_app(cred)
             print("Firebase has been initialized successfully.")
         except Exception as e:
@@ -17,6 +20,7 @@ def initialize_firebase():
             raise e
     else:
         print("Firebase was already initialized.")
+
 
 # Function to get a reference to Firestore
 def get_firestore_client():
@@ -30,4 +34,3 @@ def get_firestore_client():
     except Exception as e:
         print(f"Error getting Firestore client: {e}")
         raise e
-

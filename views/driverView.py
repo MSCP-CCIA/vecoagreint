@@ -1,5 +1,7 @@
 import flet as ft
 from dataBaseFirebase.fireStoreCrud import *
+
+
 def driverFormView(page: ft.Page):
     """
     Creates and configures the driver form page.
@@ -69,7 +71,13 @@ def driverFormView(page: ft.Page):
     # Buttons to search and save
     search_button = ft.ElevatedButton(
         text="Buscar",
-        on_click=lambda e: search_driver(cedula_input.value),
+        on_click=lambda e: search_driver(
+            cedula_input.value,
+            nombre_input,
+            apellidos_input,
+            tipo_vehiculo_input,
+            placa_input,
+        ),
         style=ft.ButtonStyle(
             bgcolor="#FF7043",
             color="white",
@@ -84,11 +92,11 @@ def driverFormView(page: ft.Page):
     save_button = ft.ElevatedButton(
         text="Guardar",
         on_click=lambda e: save_driver(
-            cedula_input.value,
-            nombre_input.value,
-            apellidos_input.value,
-            tipo_vehiculo_input.value,
-            placa_input.value,
+            cedula_input,
+            nombre_input,
+            apellidos_input,
+            tipo_vehiculo_input,
+            placa_input,
         ),
         style=ft.ButtonStyle(
             bgcolor="#FF7043",
@@ -104,7 +112,9 @@ def driverFormView(page: ft.Page):
     # Home button
     home_button = ft.ElevatedButton(
         text="Home",
-        on_click=lambda e: page.go('/'),  # Cambia '/' al path de tu página principal
+        on_click=lambda e: page.go(
+            "/"
+        ),  # Cambia '/' al path de tu página principal
         style=ft.ButtonStyle(
             bgcolor="#FF7043",
             color="white",
@@ -153,7 +163,7 @@ def driverFormView(page: ft.Page):
                 controls=[home_button],
                 alignment=ft.MainAxisAlignment.END,
                 spacing=10,
-            )
+            ),
         ],
         alignment=ft.MainAxisAlignment.CENTER,
         spacing=20,
@@ -161,19 +171,22 @@ def driverFormView(page: ft.Page):
 
     page.add(main_view)
 
-def search_driver(cedula, nombre_input, apellidos_input, tipo_vehiculo_input, placa_input):
+
+def search_driver(
+    cedula, nombre_input, apellidos_input, tipo_vehiculo_input, placa_input
+):
+    print("toco boton")
     """
     Function to handle driver search.
     Updates the input fields with driver data if found.
     """
-    driver_data = read_document(cedula)
-
+    driver_data = read_document("drivers", cedula)
     if driver_data:
         # Actualiza los campos con los datos del conductor
-        nombre_input.value = driver_data.get('nombre', '')
-        apellidos_input.value = driver_data.get('apellidos', '')
-        tipo_vehiculo_input.value = driver_data.get('tipo_vehiculo', '')
-        placa_input.value = driver_data.get('placa', '')
+        nombre_input.value = driver_data.get("first_name")
+        apellidos_input.value = driver_data.get("last_name")
+        tipo_vehiculo_input.value = driver_data.get("type_vehicle")
+        placa_input.value = driver_data.get("plate")
 
         # Llama a update() para reflejar los cambios en la interfaz
         nombre_input.update()
@@ -185,27 +198,37 @@ def search_driver(cedula, nombre_input, apellidos_input, tipo_vehiculo_input, pl
     else:
         print(f"No se encontró un conductor con la cédula: {cedula}")
         # Si no se encuentra el conductor, vacía los campos
-        nombre_input.value = ''
-        apellidos_input.value = ''
-        tipo_vehiculo_input.value = ''
-        placa_input.value = ''
+        nombre_input.value = ""
+        apellidos_input.value = ""
+        tipo_vehiculo_input.value = ""
+        placa_input.value = ""
         nombre_input.update()
         apellidos_input.update()
         tipo_vehiculo_input.update()
         placa_input.update()
+
 
 def save_driver(cedula, nombre, apellidos, tipo_vehiculo, placa):
     """
     Function to handle saving driver data.
     """
     driver_data = {
-        "cedula": cedula,
-        "nombre": nombre,
-        "apellidos": apellidos,
-        "tipo_vehiculo": tipo_vehiculo,
-        "placa": placa
+        "first_name": nombre.value,
+        "last_name": apellidos.value,
+        "type_vehicle": tipo_vehiculo.value,
+        "plate": placa.value,
     }
 
     # Usa la función de creación/actualización del CRUD para guardar los datos
-    create_document(driver_data, cedula)
-    print(f"Conductor guardado: {cedula}, {nombre} {apellidos}, {tipo_vehiculo}, {placa}")
+    create_document(driver_data, "drivers", cedula.value)
+    print(
+        f"Conductor guardado: {cedula.value}, {nombre.value} {apellidos.value}, {tipo_vehiculo.value}, {placa.value}"
+    )
+    nombre.value = ""
+    apellidos.value = ""
+    tipo_vehiculo.value = ""
+    placa.value = ""
+    nombre.update()
+    apellidos.update()
+    tipo_vehiculo.update()
+    placa.update()

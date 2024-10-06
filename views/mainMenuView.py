@@ -1,5 +1,6 @@
 import flet as ft
 
+
 def mainMenuView(page: ft.Page):
     """
     Creates and configures the main page with a title and sections for navigation.
@@ -158,4 +159,3 @@ def mainMenuView(page: ft.Page):
     )
 
     page.add(main_view)
-

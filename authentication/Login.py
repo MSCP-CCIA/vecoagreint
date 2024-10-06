@@ -15,9 +15,7 @@ def authenticate_user(email, password):
             - str: The user's ID token if authentication was successful, otherwise None.
             - str: The user's refresh token if authentication was successful, otherwise None.
     """
-    api_key = (
-        "AIzaSyCeNt6Za0MM37AwxUKtJGdV9JcXqDvRs0w"  # Replace with your Firebase API key
-    )
+    api_key = "AIzaSyCeNt6Za0MM37AwxUKtJGdV9JcXqDvRs0w"  # Replace with your Firebase API key
     url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={api_key}"
     payload = {"email": email, "password": password, "returnSecureToken": True}
 
@@ -28,7 +26,9 @@ def authenticate_user(email, password):
         response_data = response.json()
         if response_data.get("error"):
             # Handle Firebase-specific errors
-            error_message = response_data["error"].get("message", "Unknown error")
+            error_message = response_data["error"].get(
+                "message", "Unknown error"
+            )
             print(f"Authentication error: {error_message}")
             return False, None, None
 

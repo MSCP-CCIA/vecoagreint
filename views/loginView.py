@@ -1,6 +1,7 @@
 import flet as ft
 from authentication.Login import authenticate_user
 
+
 def login_page(page: ft.Page):
     """
     Creates and configures the login page for the authentication system.
@@ -14,7 +15,9 @@ def login_page(page: ft.Page):
     page.bgcolor = "black"
 
     # Ensure that the image path is correct
-    image_path = "path_to_your_image.png"  # Change this to your actual image path
+    image_path = (
+        "path_to_your_image.png"  # Change this to your actual image path
+    )
 
     # Left panel with the company name and image
     left_panel = ft.Container(
@@ -31,7 +34,7 @@ def login_page(page: ft.Page):
                     color="white",
                     size=80,
                     weight="bold",
-                )
+                ),
             ],
             expand=True,
         ),
@@ -43,14 +46,18 @@ def login_page(page: ft.Page):
 
     # Inputs for email and password
     email_input = ft.TextField(label="Email or Username", width=350)
-    password_input = ft.TextField(label="Password", password=True, can_reveal_password=True, width=350)
+    password_input = ft.TextField(
+        label="Password", password=True, can_reveal_password=True, width=350
+    )
 
     def on_login_click(e):
         email = email_input.value
         password = password_input.value
 
         # Call authenticate_user
-        is_authenticated, id_token, refresh_token = authenticate_user(email, password)
+        is_authenticated, id_token, refresh_token = authenticate_user(
+            email, password
+        )
 
         if is_authenticated:
 
@@ -58,7 +65,9 @@ def login_page(page: ft.Page):
             page.go("/mainMenuView")
         else:
             # Show snack bar with error message
-            page.snack_bar("Authentication failed. Please check your email and password.")
+            page.snack_bar(
+                "Authentication failed. Please check your email and password."
+            )
             page.update()
 
     # Form content

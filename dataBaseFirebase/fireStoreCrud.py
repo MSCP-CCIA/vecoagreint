@@ -29,7 +29,8 @@ def create_document(data, collection_name, doc_id=None):
 
 
 # Read function (R)
-def read_document(collection_name, doc_id):
+def read_document(collection_name, doc_id=None):
+    print("entro")
     """
     Reads a document from the Firestore collection.
 
@@ -102,7 +103,7 @@ def list_all_documents(collection_name):
     try:
         docs = db.collection(collection_name).stream()
         for doc in docs:
-            print(f'Document ID: {doc.id}')
-            print(f'Document data: {doc.to_dict()}')
+            print(f"Document ID: {doc.id}")
+            print(f"Document data: {doc.to_dict()}")
     except Exception as e:
         print(f"An error occurred while listing documents: {e}")

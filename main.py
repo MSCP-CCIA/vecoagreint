@@ -1,11 +1,18 @@
 import flet as ft
 from firebase_admin import auth
 
+
 def login_page(page):
     page.title = "Authentication System"
-    page.window_full_screen = True  # Para abrir la aplicación en pantalla completa
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER  # Centrar el contenido verticalmente
-    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER  # Centrar el contenido horizontalmente
+    page.window_full_screen = (
+        True  # Para abrir la aplicación en pantalla completa
+    )
+    page.vertical_alignment = (
+        ft.MainAxisAlignment.CENTER
+    )  # Centrar el contenido verticalmente
+    page.horizontal_alignment = (
+        ft.CrossAxisAlignment.CENTER
+    )  # Centrar el contenido horizontalmente
     page.bgcolor = "black"
 
     def sign_in(e):
@@ -56,8 +63,10 @@ def login_page(page):
     )
 
     # Panel derecho con el formulario de inicio de sesión
-    email_input = ft.TextField(label="Email or Username", width=350 )
-    password_input = ft.TextField(label="Password", password=True, can_reveal_password=True, width=350)
+    email_input = ft.TextField(label="Email or Username", width=350)
+    password_input = ft.TextField(
+        label="Password", password=True, can_reveal_password=True, width=350
+    )
 
     sign_in_button = ft.ElevatedButton(
         text="Log In",
@@ -127,8 +136,10 @@ def login_page(page):
 
     page.add(main_view)
 
+
 def home_page(page, user):
     page.add(ft.Text(f"Welcome, {user['email']}!", size=24, weight="bold"))
+
 
 def main(page: ft.Page):
     page.title = "Authentication System"
@@ -137,5 +148,6 @@ def main(page: ft.Page):
     page.vertical_alignment = "center"
     page.padding = 0
     login_page(page)
+
 
 ft.app(target=main)
